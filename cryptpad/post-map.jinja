@@ -1,0 +1,25 @@
+{#- -*- coding: utf-8 -*- #}
+{#- vim: ft=jinja #}
+
+{#-
+    Convenience: Make relative paths absolute.
+-#}
+
+{%- set base_path = mapdata.lookup.paths.base %}
+{%- set data_path = mapdata.lookup.paths.data %}
+{%- if not data_path.startswith("/") %}
+  {%- set data_path = base_path | path_join(data_path) %}
+{%- endif %}
+{%- for path, val in mapdata.lookup.paths.items() %}
+  {%- if val is string and not val.startswith("/") %}
+    {%- if path.startswith("data_") %}
+      {%- do mapdata.lookup.paths.update({path: data_path | path_join(val)}) %}
+    {%- else %}
+      {%- do mapdata.lookup.paths.update({path: base_path | path_join(val)}) %}
+    {%- endif %}
+  {%- endif %}
+{%- endfor %}
+
+{%- if not mapdata.lookup.user.home %}
+  {%- do mapdata.lookup.user.update({"home": base_path}) %}
+{%- endif %}

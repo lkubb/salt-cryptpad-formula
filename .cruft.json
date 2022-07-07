@@ -1,0 +1,59 @@
+{
+  "template": "https://github.com/lkubb/salt-template-formula-compose",
+  "commit": "3bf116fca254f07ebcba5a30fcc5f071472ef84a",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "_extensions": [
+        "local_extensions.YAMLDumper"
+      ],
+      "_jinja2_env_vars": {
+        "block_start_string": "{!",
+        "block_end_string": "!}",
+        "variable_start_string": "{=",
+        "variable_end_string": "=}",
+        "comment_start_string": "{@",
+        "comment_end_string": "@}"
+      },
+      "name": "CryptPad",
+      "abbr": "cryptpad",
+      "abbr_pysafe": "cryptpad",
+      "project_name": "cryptpad",
+      "containers": "cryptpad",
+      "git_username": "lkubb",
+      "_lookup": {
+        "containers": {
+          "cryptpad": {
+            "image": "docker.io/promasu/cryptpad:nginx"
+          }
+        },
+        "paths": {
+          "config_js": "config.js",
+          "customize": "customize",
+          "data": "data",
+          "data_blob": "blob",
+          "data_block": "block",
+          "data_data": "data",
+          "data_files": "datastore"
+        }
+      },
+      "_settings": {
+        "config": {
+          "httpUnsafeOrigin": "http://localhost:3000",
+          "httpSafeOrigin": "http://localhost:3001",
+          "httpAddress": "127.0.0.1",
+          "httpPort": 3000,
+          "adminKeys": [],
+          "logToStdout": true
+        },
+        "config_nginx": {
+          "http2_disable": true,
+          "port": 7449
+        },
+        "customizations_app": {}
+      },
+      "_template": "https://github.com/lkubb/salt-template-formula-compose"
+    }
+  },
+  "directory": null
+}

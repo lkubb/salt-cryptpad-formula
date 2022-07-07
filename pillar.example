@@ -1,0 +1,378 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+# yamllint disable rule:comments-indentation
+---
+cryptpad:
+  install:
+      # Install rootless containers running as dedicated user.
+    rootless: true
+      # When applying `clean` states, also remove application data.
+      # Setting this to true might incur accidental data loss!
+    remove_all_data_for_sure: false
+  config:
+      # To give access to the admin panel to a user account,
+      # just add their public signing key, which can be found
+      # on the settings page for registered users.
+    adminKeys: []
+      # Listening address of the NodeJS server. Do not change this,
+      # this formula uses the nginx image where only nginx is exposed.
+    httpAddress: 127.0.0.1
+      # Listening port of the NodeJS server (for httpUnsafeOrigin).
+      # Do not change this as well, see above.
+    httpPort: 3000
+      # CryptPad is designed to serve its content over two domains.
+      # Account passwords and cryptographic content is handled on the 'main' domain,
+      # while the user interface is loaded on a 'sandbox' domain
+      # which can only access information which the main domain willingly shares.
+      # httpUnsafeOrigin is the URL that clients will enter to load your instance.
+      # In a production instance this should be available ONLY over HTTPS.
+    httpUnsafeOrigin: http://localhost:3000
+      # httpSafeOrigin is the URL that is used for the 'sandbox' described above.
+      # To correctly configure your production instance you must provide a URL
+      # with a different domain (a subdomain is sufficient).
+    httpSafeOrigin: http://localhost:3001
+  # httpSafePort: 3001
+      # CryptPad will launch a child process for every core available.
+      # You may want to limit how much computing power CryptPad can take.
+  # maxWorkers: 4
+      # Pads that are not 'pinned' by any registered user can be set to expire
+      # after a configurable number of days of inactivity (default 90 days).
+      # The value can be changed or set to false to remove expiration.
+      # Expired pads can then be removed using a cron job calling the
+      # `evict-inactive.js` script with node.
+  # inactiveTime: 90
+      # CryptPad archives some data instead of deleting it outright.
+      # `cryptpad/scripts/evict-inactive.js` is intended to be run daily.
+  # archiveRetentionTime: 15
+      # It's possible to configure your instance to remove data
+      # stored on behalf of inactive accounts. Set 'accountRetentionTime'
+      # to the number of days an account can remain idle before its
+      # documents and other account data is removed.
+      # Leave this value commented out to preserve all data stored
+      # by user accounts regardless of inactivity.
+  # accountRetentionTime: 365
+      # Starting with CryptPad 3.23.0, the server automatically runs
+      # the script responsible for removing inactive data according to
+      # your configured definition of inactivity. Set this value to `true`
+      # if you prefer not to remove inactive data, or if you prefer to
+      # do so manually using `scripts/evict-inactive.js`.
+  # disableIntegratedEviction: true
+      # Anything larger than this size will be rejected.
+      # Defaults to 20MB if no value is provided.
+  # maxUploadSize: 20971520 # 20 * 1024 * 1024
+      # Users with premium accounts (those with a plan included in their customLimit)
+      # can benefit from an increased upload size limit. By default they are restricted
+      # to the same upload size as any other registered user.
+  # premiumUploadSize: 104857600 # 100 * 1024 * 1024
+      # CryptPad stores each document in an individual file on your hard drive.
+  # filePath: './datastore/'
+      # CryptPad offers the ability to archive data for a configurable period
+      # before deleting it, allowing a means of recovering data in the event
+      # that it was deleted accidentally.
+  # archivePath: './data/archive'
+      # CryptPad allows logged in users to request that particular documents be
+      # stored by the server indefinitely. This is called 'pinning'.
+      # Pin requests are stored in a pin-store.
+  # pinPath: './data/pins'
+      # If you would like the list of scheduled tasks to be stored in
+      # a custom location, change the path below.
+  # taskPath: './data/tasks'
+      # If you would like users' authenticated blocks to be stored in
+      # a custom location, change the path below.
+  # blockPath: './block'
+      # CryptPad allows logged in users to upload encrypted files. Files/blobs
+      # are stored in a 'blob-store'.
+  # blobPath: './blob'
+      # CryptPad stores incomplete blobs in a 'staging' area until they are
+      # fully uploaded.
+  # blobStagingPath: './data/blobstage'
+  # decreePath: './data/decrees'
+      # CryptPad supports logging events directly to the disk in a 'logs' directory
+      # Set its location here, or set it to false (or nothing) if you'd rather not log.
+  # logPath: './data/logs'
+    logToStdout: true
+      # silly, verbose, debug, feedback, info, warn, error
+  # logLevel: 'info'
+      # Clients can use the /settings/ app to opt out of usage feedback
+      # which informs the server of things like how much each app is being
+      # used, and whether certain clientside features are supported by
+      # the client's browser.
+      # Ignore feedback with `false` or by commenting the attribute.
+      # You will need to set your logLevel to include 'feedback'.
+  # logFeedback: false
+  # verbose: false
+      # 'installMethod' is included in server telemetry to voluntarily
+      # indicate how many instances are using unofficial installation methods
+      # such as Docker.
+  # installMethod: 'unspecified'
+
+    # Configuration for the included Nginx server.
+  config_nginx:
+  # api_domain: null
+  # files_domain: null
+      # Traefik can't use HTTP2 to communicate with cryptpad_websocket
+      # A workaround is to disable HTTP2 in Nginx.
+    http2_disable: true
+      # This is the port the service will be mapped to on the host.
+      # Since this formula is intended to run behind a reverse proxy,
+      # it only configures a HTTP endpoint.
+    port: 7449
+  # realip_header: null
+  # realip_recursive: null
+  # trusted_proxy: null
+
+    # Some further customizations can be done in customize/application_config.js.
+    # Set them here.
+  customizations_app: {}
+      # Select the buttons displayed on the main page to create new collaborative
+      # sessions. Removing apps from the list will prevent users from accessing them.
+      # They will instead be redirected to the drive.
+      # You should never remove the drive from this list.
+  # availablePadTypes:
+  #   - drive
+  #   - teams
+  #   - sheet
+  #   - doc
+  #   - presentation
+  #   - pad
+  #   - kanban
+  #   - code
+  #   - form
+  #   - poll
+  #   - whiteboard
+  #   - file
+  #   - contacts
+  #   - slide
+  #   - convert
+      # The registered only types are apps restricted to registered users.
+      # The apps listed here by default can't work without a user account.
+  # registeredOnlyTypes: ['file', 'contacts', 'notifications', 'support']
+      # New applications may be introduced in an "early access" state.
+  # enableEarlyAccess: false
+      # To prevent apps that aren't officially supported from showing up
+      # in the document creation modal
+  # hiddenTypes:
+  #   - drive
+  #   - teams
+  #   - contacts
+  #   - todo
+  #   - file
+  #   - accounts
+  #   - calendar
+  #   - poll
+  #   - convert
+  #   # 'doc', 'presentation'
+      # 'doc' and 'presentation' are considered experimental and are hidden from users
+      # unless they have a custom quota applied via the admin panel. You can customize
+      # which apps are treated this way via the parameter below. This behaviour is not
+      # officially supported.
+  # premiumTypes: ['doc', 'presentation']
+      # CryptPad is available is multiple languages, but only English and French are
+      # maintained by the developers. An empty list will load all available languages
+      # for CryptPad. The list of available languages can be found at the top of
+      # `/customize.dist/messages.js`. The list should only contain languages codes.
+  # availableLanguages: ['en', 'fr', 'de']
+      # define values used in at least one of the static pages' footer or the
+      # 'About CryptPad' menu. `false` to disable, `true` for default or
+      # map of e.g. {default: 'https://example.com/privacy.html',
+      #              'fr': 'https://example.com/privacy.fr.html'}
+  # imprint: false
+  # privacy: false
+  # terms: false
+  # source: true
+  # roadmap: false
+      # By default CryptPad instances display some text on the home page indicating that
+      # they are an independent community instance of the software. You can provide
+      # customized messages for each language you intend to support.
+  # hostDescription: {}
+  #     # default: "Hello world"
+  #     # en: "Hello world"
+  #     # fr: "Bonjour le monde"
+  #     # de: "Hallo Welt"
+  #     # "pt-br": "Olá Mundo"
+      # Cryptpad apps use a common API to display notifications to users
+      # by default, notifications are hidden after 5 seconds.
+      # You can change their duration here (measured in milliseconds).
+  # notificationTimeout: 5000
+  # disableUserlistNotifications: false
+      # Update the default colors available in the whiteboard application
+  # whiteboardPalette:
+  #     - '#000000' # black
+  #     - '#FFFFFF' # white
+  #     - '#848484' # grey
+  #     - '#8B4513' # saddlebrown
+  #     - '#FF0000' # red
+  #     - '#FF8080' # peach?
+  #     - '#FF8000' # orange
+  #     - '#FFFF00' # yellow
+  #     - '#80FF80' # light green
+  #     - '#00FF00' # green
+  #     - '#00FFFF' # cyan
+  #     - '#008B8B' # dark cyan
+  #     - '#0000FF' # blue
+  #     - '#FF00FF' # fuschia
+  #     - '#FF00C0' # hot pink
+  #     - '#800080' # purple
+      # Background color in the apps with centered content
+      #   - file app in view mode
+      #   - rich text app when editor's width reduced in settings
+  # appBackgroundColor: '#666'
+  # enableTemplates: true
+  # enableHistory: true
+      # user passwords are hashed with scrypt, and salted with their username
+      # this value will be appended to the username, causing the resulting hash
+      # to differ from other CryptPad instances if customized. This makes it
+      # such that anyone who wants to bruteforce common credentials must do so
+      # again on each CryptPad instance that they wish to attack.
+      # WARNING: this should only be set when your CryptPad instance is first
+      # created. Changing it at a later time will break logins for all existing
+      # users.
+  # loginSalt: ''
+  # minimumPasswordLength: 8
+      # Amount of time (ms) before aborting the session when the algorithm
+      # cannot synchronize the pad
+  # badStateTimeout: 30000
+      # Customize the icon used for each application. You can update the colors
+      # by making a copy of /customize.dist/src/less2/include/colortheme.less
+  # applicationsIcon:
+  #     file: 'cptools-file'
+  #     fileupload: 'cptools-file-upload'
+  #     folderupload: 'cptools-folder-upload'
+  #     link: 'fa-link'
+  #     pad: 'cptools-richtext'
+  #     code: 'cptools-code'
+  #     slide: 'cptools-slide'
+  #     poll: 'cptools-poll'
+  #     form: 'cptools-poll'
+  #     whiteboard: 'cptools-whiteboard'
+  #     todo: 'cptools-todo'
+  #     contacts: 'fa-address-book'
+  #     calendar: 'fa-calendar'
+  #     kanban: 'cptools-kanban'
+  #     doc: 'fa-file-word-o'
+  #     presentation: 'fa-file-powerpoint-o'
+  #     sheet: 'fa-file-excel-o'
+  #     drive: 'fa-hdd-o'
+  #     teams: 'fa-users'
+  #     admin: 'fa-gears'
+  #     settings: 'fa-gear'
+  #     profile: 'fa-user-circle'
+  #     support: 'fa-life-ring'
+  #     accounts: 'fa-ticket'
+      # Ability to create owned pads and expiring pads through a new pad creation
+      # screen. The new screen can be disabled by the users in their settings page
+  # displayCreationScreen: true
+      # Prevent anonymous users from storing pads in their drive
+      # NOTE: this is only enforced client-side as the server does not distinguish
+      # between users drives and pads
+  # disableAnonymousStore: false
+      # Prevent anonymous users from creating new pads (they can still access and
+      # edit existing ones). NOTE: this is only enforced client-side and will not
+      # prevent malicious clients from storing data
+  # disableAnonymousPadCreation: false
+      # Hide the usage bar in settings and drive
+  # hideUsageBar: true
+      # Disable feedback for all the users and hide the settings part about feedback
+  # disableFeedback: true
+      # Add code to be executed on every page before loading the user object
+  # beforeLogin: "function(isLoggedIn, callback) {}"
+      # Add code to be executed on every page after the user object is loaded
+  # afterLogin: "function(api, callback) {}"
+      # Disabling the profile app allows you to import the profile information
+      # from an external source and make sure the users can't change them from CryptPad
+  # disableProfile: true
+      # Disable the use of webworkers and sharedworkers in CryptPad.
+  # disableWorkers: false
+      # To avoid impacting the user experience significantly, we're limiting
+      # the number of teams per user to 3 by default
+  # maxTeamsSlots: 5
+      # Users and teams are indistinguishable in the database so teams will offer
+      # the same storage limits as users by default. We're limiting the number of
+      # teams each user is able to own to 1 in order to make sure users don't use
+      # "fake" teams (1 member) just to increase their storage limit.
+  # maxOwnedTeams: 5
+      # A "degraded" mode can now be set when a certain number of editors are in
+      # a document at the same time. This mode disables the userlist, the chat and the
+      # position of other users' cursor.
+  # degradedLimit: 8
+      # In "legacy" mode, one-time users were always creating an "anonymous" drive
+      # when visiting CryptPad. The new "driveless" mode allow users to open an existing
+      # pad without creating a drive in the background.
+  # allowDrivelessMode: true
+  # emojiAvatars: >-
+  #   '🙈 🦀 🐞 🦋 🐬 🐋 🐢 🦉 🦆 🐧 🦡 🦘 🦨 🦦 🦥 🐼 🐻 🦝
+  #   🦓 🐄 💮️ 🐙️ 🌸️ 🌻️ 🐝️ 🐐 🦙 🦒 🐘 🦏 🐁 🐹 🐰 🦫 🦔 🐨 🐱
+  #   🐺 👺 👹 👽 👾 🤖'.split(/\s+/)
+
+  lookup:
+    rootgroup: root
+    compose:
+      create_pod: null
+      pod_args: null
+      project_name: cryptpad
+      remove_orphans: true
+      service:
+        container_prefix: null
+        ephemeral: true
+        pod_prefix: null
+        restart_policy: on-failure
+        separator: null
+        stop_timeout: null
+    paths:
+      base: /opt/containers/cryptpad
+      compose: docker-compose.yml
+      config_cryptpad: cryptpad.env
+      config_js: config.js
+      customize: customize
+      data: data
+      data_blob: blob
+      data_block: block
+      data_data: data
+      data_files: datastore
+    user:
+      groups: []
+      home: null
+      name: cryptpad
+      shell: /usr/sbin/nologin
+      uid: null
+    containers:
+      cryptpad:
+        image: docker.io/promasu/cryptpad:nginx
+
+  tofs:
+      # The files_switch key serves as a selector for alternative
+      # directories under the formula files directory. See TOFS pattern
+      # doc for more info.
+      # Note: Any value not evaluated by `config.get` will be used literally.
+      # This can be used to set custom paths, as many levels deep as required.
+    files_switch:
+      - any/path/can/be/used/here
+      - id
+      - roles
+      - osfinger
+      - os
+      - os_family
+
+      # All aspects of path/file resolution are customisable using the options below.
+      # This is unnecessary in most cases; there are sensible defaults.
+      # Default path: salt://< path_prefix >/< dirs.files >/< dirs.default >
+      # I.e.: salt://cryptpad/files/default
+      # path_prefix: template_alt
+      # dirs:
+      #   files: files_alt
+      #   default: default_alt
+      # The entries under `source_files` are prepended to the default source files
+      # given for the state
+    source_files:
+      CryptPad compose file is managed:
+        - docker-compose_alt.yml
+        - docker-compose_alt.yml.j2
+      cryptpad environment file is managed:
+        - cryptpad_alt.env
+        - cryptpad_alt.env.j2
+      CryptPad config file is managed:
+        - config_alt.js
+        - config_alt.js.j2
+      CryptPad application customization file is managed:
+        - application_config_alt.js
+        - application_config_alt.js.j2

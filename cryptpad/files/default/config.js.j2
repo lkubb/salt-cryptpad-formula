@@ -1,0 +1,43 @@
+{%- macro render(var, indent_width=2) %}
+{%-   if var is mapping %}
+{%-     for conf, val in var | dictsort %}
+{%-       if val is mapping %}
+{%-         if not val %}
+{{ conf | indent(indent_width) }}: {}{{ "," if not loop.last }}
+{%-         else %}
+{{ conf | indent(indent_width) }}: {
+{{- render(val, indent_width) | indent(indent_width) }}
+{{ "}" | indent(indent_width) }}{{ "," if not loop.last }}
+{%-         endif %}
+{%-       elif val | is_list %}
+{%-         if not val %}
+{{ conf | indent(indent_width) }}: []{{ "," if not loop.last }}
+{%-         else %}
+{{ conf | indent(indent_width) }}: [
+{{- render(val, indent_width) | indent(indent_width) }}
+{{ "]" | indent(indent_width) }}{{ "," if not loop.last }}
+{%-         endif %}
+{%-       else %}
+{{ conf | indent(indent_width) }}: {{ render(val) }}{{ "," if not loop.last }}
+{%-       endif %}
+{%-     endfor %}
+{%-   elif var | is_list %}
+{%-     for val in var %}
+{%-       if val is mapping %}
+{{ "" | indent(indent_width) }}{
+{%-       endif %}
+{{- render(val, indent_width) | indent(indent_width) }}{{ "," if not loop.last }}
+{%-       if val is mapping %}
+{{ "}" | indent(indent_width) }}{{ "," if not loop.last }}
+{%-       endif %}
+{%-     endfor %}
+{%-   elif var is string %}"{{ var }}"
+{%-   elif var in [true, false] %}{{ var | lower }}
+{%-   elif var is none %}null
+{%-   elif var is integer %}{{ var }}
+{%-   endif %}
+{%- endmacro %}
+
+module.exports = {
+{{- render(cryptpad.config) | indent(2) }}
+}

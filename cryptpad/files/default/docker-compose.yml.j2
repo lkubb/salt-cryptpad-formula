@@ -1,0 +1,24 @@
+---
+version: '3.8'
+
+services:
+  cryptpad:
+    image: {{ cryptpad.lookup.containers.cryptpad.image }}
+    hostname: cryptpad
+    env_file:
+      - {{ cryptpad.lookup.paths.config_cryptpad }}
+    volumes:
+      - {{ cryptpad.lookup.paths.config_js }}:/cryptpad/config/config.js
+      - {{ cryptpad.lookup.paths.customize }}:/cryptpad/customize
+      - {{ cryptpad.lookup.paths.data_blob }}:/cryptpad/blob
+      - {{ cryptpad.lookup.paths.data_block }}:/cryptpad/block
+      - {{ cryptpad.lookup.paths.data_data }}:/cryptpad/data
+      - {{ cryptpad.lookup.paths.data_files }}:/cryptpad/datastore
+    ports:
+      - "{{ cryptpad.config_nginx.port }}:80"
+    expose:
+      - "80"
+    ulimits:
+      nofile:
+        soft: 1000000
+        hard: 1000000

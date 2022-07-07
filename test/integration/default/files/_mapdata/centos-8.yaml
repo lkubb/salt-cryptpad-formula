@@ -1,0 +1,78 @@
+# yamllint disable rule:indentation rule:line-length
+# CentOS Linux-8
+---
+values:
+values:
+  added_in_defaults: defaults_value
+  added_in_lookup: lookup_value
+  added_in_pillar: pillar_value
+  lookup:
+    arch: amd64
+    rootgroup: root
+    compose:
+      create_pod: null
+      pod_args: null
+      project_name: cryptpad
+      remove_orphans: true
+      service:
+        container_prefix: null
+        ephemeral: true
+        pod_prefix: null
+        restart_policy: on-failure
+        separator: null
+        stop_timeout: null
+    paths:
+      base: /opt/containers/cryptpad
+      compose: docker-compose.yml
+      config_cryptpad: cryptpad.env
+      config_js: config.js
+      customize: customize
+      data: data
+      data_blob: blob
+      data_block: block
+      data_data: data
+      data_files: datastore
+    user:
+      groups: []
+      home: null
+      name: cryptpad
+      shell: /usr/sbin/nologin
+      uid: null
+    containers:
+      cryptpad:
+        image: docker.io/promasu/cryptpad:nginx
+  install:
+    rootless: true
+    remove_all_data_for_sure: false
+  config:
+    adminKeys: []
+    httpAddress: 127.0.0.1
+    httpPort: 3000
+    httpSafeOrigin: http://localhost:3001
+    httpUnsafeOrigin: http://localhost:3000
+    logToStdout: true
+  config_nginx:
+    http2_disable: true
+    port: 7449
+  customizations_app: {}
+  map_jinja:
+    sources:
+    - Y:G@osarch
+    - Y:G@os_family
+    - Y:G@os
+    - Y:G@osfinger
+    - C@cryptpad
+    - Y:G@id
+  master: template-master
+  tofs:
+    files_switch:
+    - any/path/can/be/used/here
+    - id
+    - roles
+    - osfinger
+    - os
+    - os_family
+    source_files:
+      CryptPad environment file is managed:
+      - cryptpad.env.j2
+  winner: pillar
