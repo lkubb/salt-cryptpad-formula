@@ -33,6 +33,9 @@ CryptPad user session is not initialized at boot:
   compose.lingering_managed:
     - name: {{ cryptpad.lookup.user.name }}
     - enable: false
+    - onlyif:
+      - fun: user.info
+        name: {{ cryptpad.lookup.user.name }}
 
 CryptPad user account is absent:
   user.absent:
@@ -40,6 +43,9 @@ CryptPad user account is absent:
     - purge: {{ cryptpad.install.remove_all_data_for_sure }}
     - require:
       - CryptPad is absent
+    - retry:
+        attempts: 5
+        interval: 2
 
 {%- if cryptpad.install.remove_all_data_for_sure %}
 

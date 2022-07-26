@@ -17,6 +17,7 @@ cryptpad:
         ephemeral: true
         pod_prefix: null
         restart_policy: on-failure
+        restart_sec: 2
         separator: null
         stop_timeout: null
     paths:
@@ -36,6 +37,7 @@ cryptpad:
       name: cryptpad
       shell: /usr/sbin/nologin
       uid: null
+      gid: null
     containers:
       cryptpad:
         image: docker.io/promasu/cryptpad:nginx

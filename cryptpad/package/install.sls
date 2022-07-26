@@ -22,6 +22,8 @@ CryptPad user session is initialized at boot:
   compose.lingering_managed:
     - name: {{ cryptpad.lookup.user.name }}
     - enable: {{ cryptpad.install.rootless }}
+    - require:
+      - user: {{ cryptpad.lookup.user.name }}
 
 CryptPad paths are present:
   file.directory:
