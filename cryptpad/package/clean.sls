@@ -8,6 +8,18 @@
 include:
   - {{ sls_config_clean }}
 
+{%- if cryptpad.install.autoupdate_service %}
+
+Podman autoupdate service is disabled for CryptPad:
+{%-   if cryptpad.install.rootless %}
+  compose.systemd_service_disabled:
+    - user: {{ cryptpad.lookup.user.name }}
+{%-   else %}
+  service.disabled:
+{%-   endif %}
+    - name: podman-auto-update.timer
+{%- endif %}
+
 CryptPad is absent:
   compose.removed:
     - name: {{ cryptpad.lookup.paths.compose }}

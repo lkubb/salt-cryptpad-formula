@@ -71,3 +71,15 @@ CryptPad is installed:
     - require:
       - user: {{ cryptpad.lookup.user.name }}
 {%- endif %}
+
+{%- if cryptpad.install.autoupdate_service is not none %}
+
+Podman autoupdate service is managed for CryptPad:
+{%-   if cryptpad.install.rootless %}
+  compose.systemd_service_{{ "enabled" if cryptpad.install.autoupdate_service else "disabled" }}:
+    - user: {{ cryptpad.lookup.user.name }}
+{%-   else %}
+  service.{{ "enabled" if cryptpad.install.autoupdate_service else "disabled" }}:
+{%-   endif %}
+    - name: podman-auto-update.timer
+{%- endif %}

@@ -6,6 +6,12 @@ cryptpad:
   install:
       # Install rootless containers running as dedicated user.
     rootless: true
+      # Add autoupdate label to containers, allowing to run
+      # podman autoupdate (manually)
+    autoupdate: true
+      # Manage podman-auto-update.timer (auto-autoupdate)
+      # (null=do not manage, false=disable, true=enable)
+    autoupdate_service: false
       # When applying `clean` states, also remove application data.
       # Setting this to true might incur accidental data loss!
     remove_all_data_for_sure: false
