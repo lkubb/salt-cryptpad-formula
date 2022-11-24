@@ -27,9 +27,9 @@
   {{ render(val, indent_width) | indent(indent_width) }}{{ "," if not loop.last }}
 {%-     endfor %}
 ]
-{%-   elif var is string and var.startswith("function") or var.endswith(".split(/\s+/)") %}{{ var }}
-{%-   elif var is string %}"{{ var }}"
 {%-   elif var in [true, false] %}{{ var | lower }}
+{%-   elif var is string and (var.startswith("function")) or (var.endswith(".split(/\s+/)")) %}{{ var }}
+{%-   elif var is string %}"{{ var }}"
 {%-   elif var is none %}null
 {%-   elif var is integer %}{{ var }}
 {%-   endif %}
