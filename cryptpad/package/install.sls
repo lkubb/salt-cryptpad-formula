@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
+{%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as cryptpad with context %}
 {%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
 
@@ -35,11 +34,28 @@ CryptPad paths are present:
     - require:
       - user: {{ cryptpad.lookup.user.name }}
 
+{%- if cryptpad.install.podman_api %}
+
+CryptPad podman API is enabled:
+  compose.systemd_service_enabled:
+    - name: podman
+    - user: {{ cryptpad.lookup.user.name }}
+    - require:
+      - CryptPad user session is initialized at boot
+
+CryptPad podman API is available:
+  compose.systemd_service_running:
+    - name: podman
+    - user: {{ cryptpad.lookup.user.name }}
+    - require:
+      - CryptPad user session is initialized at boot
+{%- endif %}
+
 CryptPad compose file is managed:
   file.managed:
     - name: {{ cryptpad.lookup.paths.compose }}
-    - source: {{ files_switch(['docker-compose.yml', 'docker-compose.yml.j2'],
-                              lookup='CryptPad compose file is present'
+    - source: {{ files_switch(["docker-compose.yml", "docker-compose.yml.j2"],
+                              lookup="CryptPad compose file is present"
                  )
               }}
     - mode: '0644'

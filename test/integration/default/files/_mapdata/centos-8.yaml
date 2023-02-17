@@ -2,7 +2,6 @@
 # CentOS Linux-8
 ---
 values:
-values:
   added_in_defaults: defaults_value
   added_in_lookup: lookup_value
   added_in_pillar: pillar_value
@@ -51,6 +50,7 @@ values:
     autoupdate: true
     autoupdate_service: false
     remove_all_data_for_sure: false
+    podman_api: true
   config:
     adminKeys: []
     httpAddress: 127.0.0.1

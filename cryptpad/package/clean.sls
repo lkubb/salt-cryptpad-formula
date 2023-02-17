@@ -1,8 +1,14 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
-{%- set sls_config_clean = tplroot ~ '.config.clean' %}
+{#-
+    Removes the cryptpad containers
+    and the corresponding user account and service units.
+    Has a depency on `cryptpad.config.clean`_.
+    If ``remove_all_data_for_sure`` was set, also removes all data.
+#}
+
+{%- set tplroot = tpldir.split("/")[0] %}
+{%- set sls_config_clean = tplroot ~ ".config.clean" %}
 {%- from tplroot ~ "/map.jinja" import mapdata as cryptpad with context %}
 
 include:
@@ -40,6 +46,25 @@ CryptPad compose file is absent:
     - name: {{ cryptpad.lookup.paths.compose }}
     - require:
       - CryptPad is absent
+
+{%- if cryptpad.install.podman_api %}
+
+CryptPad podman API is unavailable:
+  compose.systemd_service_dead:
+    - name: podman
+    - user: {{ cryptpad.lookup.user.name }}
+    - onlyif:
+      - fun: user.info
+        name: {{ cryptpad.lookup.user.name }}
+
+CryptPad podman API is disabled:
+  compose.systemd_service_disabled:
+    - name: podman
+    - user: {{ cryptpad.lookup.user.name }}
+    - onlyif:
+      - fun: user.info
+        name: {{ cryptpad.lookup.user.name }}
+{%- endif %}
 
 CryptPad user session is not initialized at boot:
   compose.lingering_managed:

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # vim: ft=yaml
 ---
 cryptpad:
@@ -49,6 +48,7 @@ cryptpad:
     autoupdate: true
     autoupdate_service: false
     remove_all_data_for_sure: false
+    podman_api: true
   config:
     adminKeys: []
     httpAddress: 127.0.0.1
