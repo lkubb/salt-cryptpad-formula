@@ -38,14 +38,14 @@ CryptPad paths are present:
 
 CryptPad podman API is enabled:
   compose.systemd_service_enabled:
-    - name: podman
+    - name: podman.socket
     - user: {{ cryptpad.lookup.user.name }}
     - require:
       - CryptPad user session is initialized at boot
 
 CryptPad podman API is available:
   compose.systemd_service_running:
-    - name: podman
+    - name: podman.socket
     - user: {{ cryptpad.lookup.user.name }}
     - require:
       - CryptPad user session is initialized at boot

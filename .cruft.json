@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/lkubb/salt-template-formula-compose",
-  "commit": "97cd1b30d1525efd53961d1b7f365dbccb69d37e",
+  "commit": "d261bbd33723b1b8df5d67d58918868e3d70d76b",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -21,7 +21,7 @@
       "project_name": "cryptpad",
       "containers": "cryptpad",
       "git_username": "lkubb",
-      "_lookup": {
+      "lookup": {
         "containers": {
           "cryptpad": {
             "image": "docker.io/promasu/cryptpad:nginx"
@@ -37,7 +37,7 @@
           "data_files": "datastore"
         }
       },
-      "_settings": {
+      "settings": {
         "config": {
           "httpUnsafeOrigin": "http://localhost:3000",
           "httpSafeOrigin": "http://localhost:3001",

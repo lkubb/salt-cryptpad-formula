@@ -51,7 +51,7 @@ CryptPad compose file is absent:
 
 CryptPad podman API is unavailable:
   compose.systemd_service_dead:
-    - name: podman
+    - name: podman.socket
     - user: {{ cryptpad.lookup.user.name }}
     - onlyif:
       - fun: user.info
@@ -59,7 +59,7 @@ CryptPad podman API is unavailable:
 
 CryptPad podman API is disabled:
   compose.systemd_service_disabled:
-    - name: podman
+    - name: podman.socket
     - user: {{ cryptpad.lookup.user.name }}
     - onlyif:
       - fun: user.info
