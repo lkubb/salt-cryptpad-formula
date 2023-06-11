@@ -2,7 +2,7 @@
 
 {%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as cryptpad with context %}
-{%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
+{%- from tplroot ~ "/libtofsstack.jinja" import files_switch with context %}
 
 CryptPad user account is present:
   user.present:
@@ -54,14 +54,16 @@ CryptPad podman API is available:
 CryptPad compose file is managed:
   file.managed:
     - name: {{ cryptpad.lookup.paths.compose }}
-    - source: {{ files_switch(["docker-compose.yml", "docker-compose.yml.j2"],
-                              lookup="CryptPad compose file is present"
+    - source: {{ files_switch(
+                    ["docker-compose.yml", "docker-compose.yml.j2"],
+                    config=cryptpad,
+                    lookup="CryptPad compose file is present",
                  )
               }}
     - mode: '0644'
     - user: root
     - group: {{ cryptpad.lookup.rootgroup }}
-    - makedirs: True
+    - makedirs: true
     - template: jinja
     - makedirs: true
     - context:

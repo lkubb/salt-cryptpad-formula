@@ -1,6 +1,5 @@
 # vim: ft=sls
 
-
 {#-
     Stops the cryptpad container services
     and disables them at boot time.
