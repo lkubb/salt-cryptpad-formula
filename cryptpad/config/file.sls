@@ -35,21 +35,25 @@ CryptPad config files are managed:
   file.managed:
     - names:
       - {{ cryptpad.lookup.paths.config_js }}:
-        - source: {{ files_switch(['config.js', 'config.js.j2'],
-                                  lookup='CryptPad config file is managed',
-                                  indent_width=10,
+        - source: {{ files_switch(
+                        ["config.js", "config.js.j2"],
+                        config=cryptpad,
+                        lookup="CryptPad config file is managed",
+                        indent_width=10,
                      )
                   }}
       - {{ cryptpad.lookup.paths.customize | path_join("application_config.js") }}:
-        - source: {{ files_switch(['application_config.js', 'application_config.js.j2'],
-                                  lookup='CryptPad application customization file is managed',
-                                  indent_width=10,
+        - source: {{ files_switch(
+                        ["application_config.js", "application_config.js.j2"],
+                        config=cryptpad,
+                        lookup="CryptPad application customization file is managed",
+                        indent_width=10,
                      )
                   }}
     - mode: '0644'
     - user: root
     - group: {{ cryptpad.lookup.user.name }}
-    - makedirs: True
+    - makedirs: true
     - template: jinja
     - require:
       - user: {{ cryptpad.lookup.user.name }}
