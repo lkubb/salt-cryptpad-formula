@@ -14,6 +14,20 @@ cryptpad:
       # When applying `clean` states, also remove application data.
       # Setting this to true might incur accidental data loss!
     remove_all_data_for_sure: false
+    # Parameters for certificate generation
+  cert:
+    ca_server: null
+    cn: null
+    days_remaining: 3
+    days_valid: 7
+    intermediate: []
+    manage: false
+    root: null
+    san: null
+    signing_cert: null
+    signing_policy: null
+    signing_private_key: null
+    # Cryptpad configuration
   config:
       # To give access to the admin panel to a user account,
       # just add their public signing key, which can be found
@@ -153,6 +167,10 @@ cryptpad:
     port: 7449
   # realip_header: null
   # realip_recursive: null
+      # TLS params will be managed automatically if cert:manage is true
+    tls_cert: null
+    tls_dhparam: null
+    tls_key: null
   # trusted_proxy: null
 
     # Some further customizations can be done in customize/application_config.js.
@@ -356,6 +374,9 @@ cryptpad:
         restart_sec: 2
         separator: null
         stop_timeout: null
+    ffdhe:
+      default_src: https://raw.githubusercontent.com/mozilla/ssl-config-generator/master/docs/ffdhe4096.txt  # yamllint disable-line rule:line-length
+      sum: 64852d6890ff9e62eecd1ee89c72af9af244dfef5b853bcedea3dfd7aade22b3
     paths:
       base: /opt/containers/cryptpad
       compose: docker-compose.yml
@@ -367,6 +388,7 @@ cryptpad:
       data_block: block
       data_data: data
       data_files: datastore
+      tls: tls
     user:
       groups: []
       home: null

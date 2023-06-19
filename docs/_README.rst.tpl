@@ -42,6 +42,7 @@ If you need (non-default) configuration, please refer to:
 Special notes
 -------------
 * This formula is written with the custom `compose modules <https://github.com/lkubb/salt-podman-formula>`_ in mind and will not work without them.
+* The semi-official containers (which this formula is intended to manage) `are currently unmaintained <https://blog.cryptpad.org/2023/06/01/status-2023-05/>`_. They are still on v5.2.1, while the latest release is 5.3. Furthermore, the (default) dual-service container's nginx.conf is broken. This formula contains a patch that should make the ``cryptpad:nginx`` container run again until the official ones are released. At this point, this formula will be updated to use those.
 
 Configuration
 -------------

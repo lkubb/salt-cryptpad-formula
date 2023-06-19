@@ -22,3 +22,14 @@
 {%- if not mapdata.lookup.user.home %}
   {%- do mapdata.lookup.user.update({"home": base_path}) %}
 {%- endif %}
+
+{%- if mapdata.cert.manage %}
+{%-   do mapdata.config_nginx.update(
+        {
+          "tls_key": "/cryptpad/tls/cert.key",
+          "tls_cert": "/cryptpad/tls/cert.pem",
+          "tls_dhparam": "/cryptpad/tls/dhparam.pem",
+        }
+      )
+%}
+{%- endif %}

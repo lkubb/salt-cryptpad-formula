@@ -1,0 +1,24 @@
+#!/bin/sh
+if [ -z "$1" ]; then
+    set -- "/usr/bin/supervisord" "-n" "-c" "/etc/supervisord.conf"
+fi
+
+for arg; do
+    shift
+    if [ "$arg" = "execdit" ]; then
+        # This patches the broken /etc/nginx/conf.d/cryptpad.conf in 5.2.1
+{%- if cryptpad.config_nginx.tls_cert and cryptpad.config_nginx.tls_key %}
+        sed -i -e 's/include letsencrypt-webroot/# &/' /etc/nginx/conf.d/cryptpad.conf \
+               -e 's/ssl_dhparam.*/ssl_dhparam \/cryptpad\/tls\/dhparam.pem;/' /etc/nginx/conf.d/cryptpad.conf
+{%- else %}
+        sed -i -e 's/include letsencrypt-webroot/# &/' /etc/nginx/conf.d/cryptpad.conf \
+               -e 's/listen \[::\]:443 ssl/listen \[::\]:80' \
+               -e 's/ssl_stapling/# &/' /etc/nginx/conf.d/cryptpad.conf \
+               -e 's/resolver /# &/' /etc/nginx/conf.d/cryptpad.conf
+{%- endif %}
+        exec "$@"
+    fi
+    set -- "$@" "$arg"
+done
+
+exec /docker-entrypoint.sh "$0" "$@" execdit

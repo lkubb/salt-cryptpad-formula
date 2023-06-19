@@ -33,6 +33,7 @@ cryptpad:
       data_block: block
       data_data: data
       data_files: datastore
+      tls: tls
     user:
       groups: []
       home: null
@@ -43,12 +44,27 @@ cryptpad:
     containers:
       cryptpad:
         image: docker.io/promasu/cryptpad:nginx
+    ffdhe:
+      default_src: https://raw.githubusercontent.com/mozilla/ssl-config-generator/master/docs/ffdhe4096.txt
+      sum: 64852d6890ff9e62eecd1ee89c72af9af244dfef5b853bcedea3dfd7aade22b3
   install:
     rootless: true
     autoupdate: true
     autoupdate_service: false
     remove_all_data_for_sure: false
     podman_api: true
+  cert:
+    ca_server: null
+    cn: null
+    days_remaining: 3
+    days_valid: 7
+    intermediate: []
+    manage: false
+    root: null
+    san: null
+    signing_cert: null
+    signing_policy: null
+    signing_private_key: null
   config:
     adminKeys: []
     httpAddress: 127.0.0.1
@@ -59,6 +75,9 @@ cryptpad:
   config_nginx:
     http2_disable: true
     port: 7449
+    tls_cert: null
+    tls_dhparam: null
+    tls_key: null
   customizations_app: {}
 
   tofs:

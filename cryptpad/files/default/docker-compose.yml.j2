@@ -1,3 +1,4 @@
+{%- set port = 443 if cryptpad.config_nginx.tls_cert and cryptpad.config_nginx.tls_key else 80 %}
 ---
 version: '3.8'
 
@@ -14,10 +15,17 @@ services:
       - {{ cryptpad.lookup.paths.data_block }}:/cryptpad/block
       - {{ cryptpad.lookup.paths.data_data }}:/cryptpad/data
       - {{ cryptpad.lookup.paths.data_files }}:/cryptpad/datastore
+      - {{ cryptpad.lookup.paths.base | path_join("patch") }}:/patch
+{%- if cryptpad.cert.manage %}
+      - {{ cryptpad.lookup.paths.tls }}:/cryptpad/tls
+{%- endif %}
+    entrypoint:
+      - /bin/sh
+      - /patch/patch.sh
     ports:
-      - "{{ cryptpad.config_nginx.port }}:80"
+      - "{{ cryptpad.config_nginx.port }}:{{ port }}"
     expose:
-      - "80"
+      - "{{ port }}"
     ulimits:
       nofile:
         soft: 1000000

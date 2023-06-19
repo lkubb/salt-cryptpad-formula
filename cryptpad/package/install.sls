@@ -69,6 +69,28 @@ CryptPad compose file is managed:
     - context:
         cryptpad: {{ cryptpad | json }}
 
+# The :nginx container has a broken entrypoint in v5.2.1
+CryptPad entrypoint patch is managed:
+  file.managed:
+    - name: {{ cryptpad.lookup.paths.base | path_join("patch", "patch.sh") }}
+    - source: {{ files_switch(
+                    ["patch.sh", "patch.sh.j2"],
+                    config=cryptpad,
+                    lookup="CryptPad entrypoint patch is managed",
+                 )
+              }}
+    - mode: '0755'
+    - user: root
+    - group: {{ cryptpad.lookup.user.name }}
+    - makedirs: true
+    - template: jinja
+    - require:
+      - user: {{ cryptpad.lookup.user.name }}
+    - watch_in:
+      - CryptPad is installed
+    - context:
+        cryptpad: {{ cryptpad | json }}
+
 CryptPad is installed:
   compose.installed:
     - name: {{ cryptpad.lookup.paths.compose }}

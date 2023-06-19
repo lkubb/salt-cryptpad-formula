@@ -41,9 +41,11 @@ CryptPad is absent:
     - require:
       - sls: {{ sls_config_clean }}
 
-CryptPad compose file is absent:
+CryptPad compose and entrypoint patch files are absent:
   file.absent:
-    - name: {{ cryptpad.lookup.paths.compose }}
+    - names:
+      - {{ cryptpad.lookup.paths.compose }}
+      - {{ cryptpad.lookup.paths.base | path_join("patch") }}
     - require:
       - CryptPad is absent
 
