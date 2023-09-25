@@ -34,3 +34,4 @@ CryptPad service is running:
 {%- endif %}
     - watch:
       - CryptPad is installed
+      - sls: {{ sls_config_file }}
