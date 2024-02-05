@@ -21,7 +21,7 @@ Cryptpad certificate private key is managed:
       - Cryptpad certificate is managed
 {%-   endif %}
     - makedirs: true
-    - user: root
+    - user: {{ cryptpad.lookup.user.name }}
     - group: {{ cryptpad.lookup.user.name }}
     - mode: '0640'
     - watch_in:
@@ -53,7 +53,7 @@ Cryptpad certificate is managed:
 {%-   endif %}
     - CN: {{ cryptpad.cert.cn or grains.fqdns | reject("==", "localhost.localdomain") | first | d(grains.id) }}
     - mode: '0640'
-    - user: root
+    - user: {{ cryptpad.lookup.user.name }}
     - group: {{ cryptpad.lookup.user.name }}
     - makedirs: true
     - append_certs: {{ cryptpad.cert.intermediate | json }}
@@ -76,7 +76,7 @@ Cryptpad DH parameters are present:
       - {{ cryptpad.lookup.ffdhe.default_src }}
     - source_hash: {{ cryptpad.lookup.ffdhe.sum }}
     - mode: '0640'
-    - user: root
+    - user: {{ cryptpad.lookup.user.name }}
     - group: {{ cryptpad.lookup.user.name }}
     - makedirs: true
     - watch_in:

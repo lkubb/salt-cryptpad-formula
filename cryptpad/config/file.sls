@@ -51,7 +51,7 @@ CryptPad config files are managed:
                      )
                   }}
     - mode: '0644'
-    - user: root
+    - user: {{ cryptpad.lookup.user.name }}
     - group: {{ cryptpad.lookup.user.name }}
     - makedirs: true
     - template: jinja

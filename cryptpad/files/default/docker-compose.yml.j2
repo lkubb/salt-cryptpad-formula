@@ -1,4 +1,15 @@
-{%- set port = 443 if cryptpad.config_nginx.tls_cert and cryptpad.config_nginx.tls_key else 80 %}
+{%- set is_network_mount = {} -%}
+{%- for path in ["customize", "data_blob", "data_block", "data_data", "data_files"] %}
+{%-   do is_network_mount.update({
+        path: salt["cmd.run_stdout"](
+          "df -P '{path}' | ".format(path=cryptpad.lookup.paths[path]) ~
+            "awk 'BEGIN {e=1} $NF ~ /^\/.+/ { e=0 ; print $1 ; exit } END { exit e }'",
+          python_shell=true,
+          ignore_retcode=true
+        )
+}) %}
+{%- endfor -%}
+{%- set port = 443 if cryptpad.config_nginx.tls_cert and cryptpad.config_nginx.tls_key else 80 -%}
 ---
 version: '3.8'
 
@@ -9,15 +20,15 @@ services:
     env_file:
       - {{ cryptpad.lookup.paths.config_cryptpad }}
     volumes:
-      - {{ cryptpad.lookup.paths.config_js }}:/cryptpad/config/config.js
-      - {{ cryptpad.lookup.paths.customize }}:/cryptpad/customize
-      - {{ cryptpad.lookup.paths.data_blob }}:/cryptpad/blob
-      - {{ cryptpad.lookup.paths.data_block }}:/cryptpad/block
-      - {{ cryptpad.lookup.paths.data_data }}:/cryptpad/data
-      - {{ cryptpad.lookup.paths.data_files }}:/cryptpad/datastore
-      - {{ cryptpad.lookup.paths.base | path_join("patch") }}:/patch
+      - {{ cryptpad.lookup.paths.config_js }}:/cryptpad/config/config.js:Z
+      - {{ cryptpad.lookup.paths.customize }}:/cryptpad/customize{%- if not is_network_mount["customize"] %}:Z{%- endif %}
+      - {{ cryptpad.lookup.paths.data_blob }}:/cryptpad/blob{%- if not is_network_mount["data_blob"] %}:Z{%- endif %}
+      - {{ cryptpad.lookup.paths.data_block }}:/cryptpad/block{%- if not is_network_mount["data_block"] %}:Z{%- endif %}
+      - {{ cryptpad.lookup.paths.data_data }}:/cryptpad/data{%- if not is_network_mount["data_data"] %}:Z{%- endif %}
+      - {{ cryptpad.lookup.paths.data_files }}:/cryptpad/datastore{%- if not is_network_mount["data_files"] %}:Z{%- endif %}
+      - {{ cryptpad.lookup.paths.base | path_join("patch") }}:/patch:Z
 {%- if cryptpad.cert.manage %}
-      - {{ cryptpad.lookup.paths.tls }}:/cryptpad/tls
+      - {{ cryptpad.lookup.paths.tls }}:/cryptpad/tls:Z
 {%- endif %}
     entrypoint:
       - /bin/sh
