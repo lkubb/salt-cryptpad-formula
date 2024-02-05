@@ -30,8 +30,8 @@ services:
       - "{{ cryptpad.config.websocketPort }}"
     ulimits:
       nofile:
-        soft: 500000
-        hard: 500000
+        soft: {{ cryptpad.container.ulimit_nofile.soft }}
+        hard: {{ cryptpad.container.ulimit_nofile.hard }}
 {%- if cryptpad.install.autoupdate %}
     labels:
       - io.containers.autoupdate=registry

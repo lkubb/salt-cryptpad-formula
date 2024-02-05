@@ -164,6 +164,12 @@ cryptpad:
     realip_recursive: false
     trusted_proxy: []
 
+    # Settings for container creation
+  container:
+    ulimit_nofile:
+      hard: 1000000
+      soft: 1000000
+
     # Some further customizations can be done in customize/application_config.js.
     # Set them here.
   customizations_app: {}

@@ -77,6 +77,10 @@ cryptpad:
     http2_disable: true
     realip_recursive: false
     trusted_proxy: []
+  container:
+    ulimit_nofile:
+      hard: 1000000
+      soft: 1000000
   customizations_app: {}
   version: 5.6.0
 

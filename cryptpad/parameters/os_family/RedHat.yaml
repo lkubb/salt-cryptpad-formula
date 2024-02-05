@@ -13,4 +13,8 @@
 values:
   lookup:
     pkg_manager: yum
+  container:
+    ulimit_nofile:
+      hard: 500000
+      soft: 500000
 ...
