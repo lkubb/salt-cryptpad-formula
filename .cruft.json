@@ -24,12 +24,11 @@
       "lookup": {
         "containers": {
           "cryptpad": {
-            "image": "docker.io/promasu/cryptpad:nginx"
+            "image": "docker.io/cryptpad/cryptpad:version-{version}"
+          },
+          "nginx": {
+            "image": "docker.io/library/nginx:stable"
           }
-        },
-        "ffdhe": {
-          "default_src": "https://raw.githubusercontent.com/mozilla/ssl-config-generator/master/docs/ffdhe4096.txt",
-          "sum": "64852d6890ff9e62eecd1ee89c72af9af244dfef5b853bcedea3dfd7aade22b3"
         },
         "paths": {
           "config_js": "config.js",
@@ -39,7 +38,8 @@
           "data_block": "block",
           "data_data": "data",
           "data_files": "datastore",
-          "tls": "tls"
+          "tls": "tls",
+          "nginx_conf": "nginx.conf"
         }
       },
       "settings": {
@@ -59,19 +59,19 @@
         "config": {
           "httpUnsafeOrigin": "http://localhost:3000",
           "httpSafeOrigin": "http://localhost:3001",
-          "httpAddress": "127.0.0.1",
+          "httpAddress": "0.0.0.0",
           "httpPort": 3000,
+          "websocketPort": 3003,
           "adminKeys": [],
           "logToStdout": true
         },
         "config_nginx": {
           "http2_disable": true,
-          "port": 7449,
-          "tls_key": null,
-          "tls_cert": null,
-          "tls_dhparam": null
+          "realip_recursive": false,
+          "trusted_proxy": []
         },
-        "customizations_app": {}
+        "customizations_app": {},
+        "version": "5.6.0"
       },
       "_template": "https://github.com/lkubb/salt-template-formula-compose"
     }

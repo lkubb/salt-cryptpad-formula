@@ -33,6 +33,7 @@ cryptpad:
       data_block: block
       data_data: data
       data_files: datastore
+      nginx_conf: nginx.conf
       tls: tls
     user:
       groups: []
@@ -43,10 +44,9 @@ cryptpad:
       gid: null
     containers:
       cryptpad:
-        image: docker.io/promasu/cryptpad:nginx
-    ffdhe:
-      default_src: https://raw.githubusercontent.com/mozilla/ssl-config-generator/master/docs/ffdhe4096.txt
-      sum: 64852d6890ff9e62eecd1ee89c72af9af244dfef5b853bcedea3dfd7aade22b3
+        image: docker.io/cryptpad/cryptpad:version-{version}
+      nginx:
+        image: docker.io/library/nginx:stable
   install:
     rootless: true
     autoupdate: true
@@ -67,18 +67,18 @@ cryptpad:
     signing_private_key: null
   config:
     adminKeys: []
-    httpAddress: 127.0.0.1
+    httpAddress: 0.0.0.0
     httpPort: 3000
     httpSafeOrigin: http://localhost:3001
     httpUnsafeOrigin: http://localhost:3000
     logToStdout: true
+    websocketPort: 3003
   config_nginx:
     http2_disable: true
-    port: 7449
-    tls_cert: null
-    tls_dhparam: null
-    tls_key: null
+    realip_recursive: false
+    trusted_proxy: []
   customizations_app: {}
+  version: 5.6.0
 
   tofs:
     # The files_switch key serves as a selector for alternative

@@ -63,24 +63,6 @@ Cryptpad certificate is managed:
     - require:
       - Cryptpad certificate private key is managed
 {%-   endif %}
-
-Cryptpad DH parameters are present:
-  file.managed:
-    - name: {{ cryptpad.lookup.paths.tls | path_join("dhparam.pem") }}
-    - source: {{ files_switch(
-                    ["ffdhe4096.pem"],
-                    config=cryptpad,
-                    lookup="Cryptpad DH parameters are present",
-                 )
-              }}
-      - {{ cryptpad.lookup.ffdhe.default_src }}
-    - source_hash: {{ cryptpad.lookup.ffdhe.sum }}
-    - mode: '0640'
-    - user: {{ cryptpad.lookup.user.name }}
-    - group: {{ cryptpad.lookup.user.name }}
-    - makedirs: true
-    - watch_in:
-      - CryptPad is installed
 {%- else %}
 
 Certs are not managed:

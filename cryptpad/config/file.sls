@@ -50,6 +50,14 @@ CryptPad config files are managed:
                         indent_width=10,
                      )
                   }}
+      - {{ cryptpad.lookup.paths.nginx_conf }}:
+        - source: {{ files_switch(
+                        ["nginx.conf", "nginx.conf.j2"],
+                        config=cryptpad,
+                        lookup="CryptPad nginx config file is managed",
+                        indent_width=10,
+                     )
+                  }}
     - mode: '0644'
     - user: {{ cryptpad.lookup.user.name }}
     - group: {{ cryptpad.lookup.user.name }}

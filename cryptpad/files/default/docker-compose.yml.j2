@@ -9,13 +9,12 @@
         )
 }) %}
 {%- endfor -%}
-{%- set port = 443 if cryptpad.config_nginx.tls_cert and cryptpad.config_nginx.tls_key else 80 -%}
 ---
 version: '3.8'
 
 services:
   cryptpad:
-    image: {{ cryptpad.lookup.containers.cryptpad.image }}
+    image: {{ cryptpad.lookup.containers.cryptpad.image.format(version=cryptpad.version) }}
     hostname: cryptpad
     env_file:
       - {{ cryptpad.lookup.paths.config_cryptpad }}
@@ -26,21 +25,27 @@ services:
       - {{ cryptpad.lookup.paths.data_block }}:/cryptpad/block{%- if not is_network_mount["data_block"] %}:Z{%- endif %}
       - {{ cryptpad.lookup.paths.data_data }}:/cryptpad/data{%- if not is_network_mount["data_data"] %}:Z{%- endif %}
       - {{ cryptpad.lookup.paths.data_files }}:/cryptpad/datastore{%- if not is_network_mount["data_files"] %}:Z{%- endif %}
-      - {{ cryptpad.lookup.paths.base | path_join("patch") }}:/patch:Z
-{%- if cryptpad.cert.manage %}
-      - {{ cryptpad.lookup.paths.tls }}:/cryptpad/tls:Z
-{%- endif %}
-    entrypoint:
-      - /bin/sh
-      - /patch/patch.sh
-    ports:
-      - "{{ cryptpad.config_nginx.port }}:{{ port }}"
     expose:
-      - "{{ port }}"
+      - "{{ cryptpad.config.httpPort }}"
+      - "{{ cryptpad.config.websocketPort }}"
     ulimits:
       nofile:
-        soft: 1000000
-        hard: 1000000
+        soft: 500000
+        hard: 500000
+{%- if cryptpad.install.autoupdate %}
+    labels:
+      - io.containers.autoupdate=registry
+{%- endif %}
+
+  cryptpad_web:
+    image: {{ cryptpad.lookup.containers.nginx.image }}
+    volumes:
+      - {{ cryptpad.lookup.paths.nginx_conf }}:/etc/nginx/conf.d/default.conf:ro,Z
+{%- if cryptpad.cert.manage %}
+      - {{ cryptpad.lookup.paths.tls }}:/etc/nginx/tls:Z
+{%- endif %}
+    ports:
+      - "{{ cryptpad.config.httpPort }}:{{ cryptpad.config.httpPort }}"
 {%- if cryptpad.install.autoupdate %}
     labels:
       - io.containers.autoupdate=registry

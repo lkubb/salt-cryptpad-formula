@@ -20,6 +20,7 @@ CryptPad environment files are absent:
     - names:
       - {{ cryptpad.lookup.paths.config_cryptpad }}
       - {{ cryptpad.lookup.paths.config_js }}
+      - {{ cryptpad.lookup.paths.nginx_conf }}
       - {{ cryptpad.lookup.paths.customize | path_join("application_config.js") }}
     - require:
       - sls: {{ sls_service_clean }}

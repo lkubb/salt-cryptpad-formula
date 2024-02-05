@@ -9,6 +9,6 @@
 
 include:
   - .package
-  - .config
   - .cert
+  - .config
   - .service

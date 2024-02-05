@@ -10,6 +10,6 @@
 
 include:
   - .service.clean
-  - .cert.clean
   - .config.clean
+  - .cert.clean
   - .package.clean

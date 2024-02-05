@@ -78,12 +78,6 @@ Manages the configuration of the cryptpad containers.
 Has a dependency on `cryptpad.package`_.
 
 
-``cryptpad.cert``
-^^^^^^^^^^^^^^^^^
-Generates a TLS certificate + key for Cryptpad.
-Has a dependency on `cryptpad.package`_.
-
-
 ``cryptpad.service``
 ^^^^^^^^^^^^^^^^^^^^
 Starts the cryptpad container services
@@ -115,12 +109,6 @@ and has a dependency on `cryptpad.service.clean`_.
 
 This does not lead to the containers/services being rebuilt
 and thus differs from the usual behavior.
-
-
-``cryptpad.cert.clean``
-^^^^^^^^^^^^^^^^^^^^^^^
-Removes generated Cryptpad TLS certificate + key.
-Depends on `cryptpad.service.clean`_.
 
 
 ``cryptpad.service.clean``

@@ -2,6 +2,7 @@
 # yamllint disable rule:comments-indentation
 ---
 cryptpad:
+  version: 5.6.0
   install:
       # Install rootless containers running as dedicated user.
     rootless: true
@@ -33,12 +34,12 @@ cryptpad:
       # just add their public signing key, which can be found
       # on the settings page for registered users.
     adminKeys: []
-      # Listening address of the NodeJS server. Do not change this,
-      # this formula uses the nginx image where only nginx is exposed.
-    httpAddress: 127.0.0.1
-      # Listening port of the NodeJS server (for httpUnsafeOrigin).
-      # Do not change this as well, see above.
+      # Listening address of the NodeJS server.
+    httpAddress: 0.0.0.0
+      # Listening port of the NodeJS server.
     httpPort: 3000
+      # Listening port of the NodeJS websocket server.
+    httpWebsocket: 3003
       # CryptPad is designed to serve its content over two domains.
       # Account passwords and cryptographic content is handled on the 'main' domain,
       # while the user interface is loaded on a 'sandbox' domain
@@ -50,6 +51,7 @@ cryptpad:
       # To correctly configure your production instance you must provide a URL
       # with a different domain (a subdomain is sufficient).
     httpSafeOrigin: http://localhost:3001
+      # The following does not seem to be used
   # httpSafePort: 3001
       # CryptPad will launch a child process for every core available.
       # You may want to limit how much computing power CryptPad can take.
@@ -154,24 +156,13 @@ cryptpad:
   # domain
       # restrictRegistration is not read from config.js
 
-    # Configuration for the included Nginx server.
+    # Configuration for the Nginx server.
   config_nginx:
-  # api_domain: null
-  # files_domain: null
-      # Traefik can't use HTTP2 to communicate with cryptpad_websocket
-      # A workaround is to disable HTTP2 in Nginx.
+      # When another reverse proxy is in front of this nginx, you might need
+      # to disable http2. This is on by default.
     http2_disable: true
-      # This is the port the service will be mapped to on the host.
-      # Since this formula is intended to run behind a reverse proxy,
-      # it only configures a HTTP endpoint.
-    port: 7449
-  # realip_header: null
-  # realip_recursive: null
-      # TLS params will be managed automatically if cert:manage is true
-    tls_cert: null
-    tls_dhparam: null
-    tls_key: null
-  # trusted_proxy: null
+    realip_recursive: false
+    trusted_proxy: []
 
     # Some further customizations can be done in customize/application_config.js.
     # Set them here.
@@ -374,9 +365,6 @@ cryptpad:
         restart_sec: 2
         separator: null
         stop_timeout: null
-    ffdhe:
-      default_src: https://raw.githubusercontent.com/mozilla/ssl-config-generator/master/docs/ffdhe4096.txt  # yamllint disable-line rule:line-length
-      sum: 64852d6890ff9e62eecd1ee89c72af9af244dfef5b853bcedea3dfd7aade22b3
     paths:
       base: /opt/containers/cryptpad
       compose: docker-compose.yml
@@ -388,6 +376,7 @@ cryptpad:
       data_block: block
       data_data: data
       data_files: datastore
+      nginx_conf: nginx.conf
       tls: tls
     user:
       groups: []
@@ -398,7 +387,9 @@ cryptpad:
       gid: null
     containers:
       cryptpad:
-        image: docker.io/promasu/cryptpad:nginx
+        image: docker.io/cryptpad/cryptpad:version-{version}
+      nginx:
+        image: docker.io/library/nginx:stable
 
   tofs:
       # The files_switch key serves as a selector for alternative
