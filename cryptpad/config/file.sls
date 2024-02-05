@@ -65,5 +65,7 @@ CryptPad config files are managed:
     - template: jinja
     - require:
       - user: {{ cryptpad.lookup.user.name }}
+    - require_in:
+      - CryptPad is installed
     - context:
         cryptpad: {{ cryptpad | json }}
