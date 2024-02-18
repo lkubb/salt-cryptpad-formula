@@ -72,6 +72,12 @@ Installs the cryptpad containers only.
 This includes creating systemd service units.
 
 
+``cryptpad.cert``
+^^^^^^^^^^^^^^^^^
+Generates a TLS certificate + key for Cryptpad.
+Has a dependency on `cryptpad.package`_.
+
+
 ``cryptpad.config``
 ^^^^^^^^^^^^^^^^^^^
 Manages the configuration of the cryptpad containers.
@@ -100,6 +106,12 @@ Removes the cryptpad containers
 and the corresponding user account and service units.
 Has a depency on `cryptpad.config.clean`_.
 If ``remove_all_data_for_sure`` was set, also removes all data.
+
+
+``cryptpad.cert.clean``
+^^^^^^^^^^^^^^^^^^^^^^^
+Removes generated Cryptpad TLS certificate + key.
+Depends on `cryptpad.service.clean`_.
 
 
 ``cryptpad.config.clean``
